@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://c0xadstmoad1b"]
+
+[ext_resource type="Texture2D" uid="uid://ckl0fqo40s0iy" path="res://assets/textures/world.png" id="1_nnsk1"]
+[ext_resource type="Script" uid="uid://cjejt55wmu1ts" path="res://scripts/World.cs" id="1_rwgxs"]
+[ext_resource type="AudioStream" uid="uid://rj0dc3m20k4o" path="res://assets/sounds/hurt.wav" id="4_k0juu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nnsk1"]
+atlas = ExtResource("1_nnsk1")
+region = Rect2(0, 0, 80, 80)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rwgxs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nnsk1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4wyf3"]
+radius = 24.020824
+
+[node name="World" type="Area2D" node_paths=PackedStringArray("timer", "hurtSound")]
+collision_mask = 2
+script = ExtResource("1_rwgxs")
+hitPoints = 10
+timer = NodePath("Timer")
+hurtSound = NodePath("HurtSound")
+knockback = 1000.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_rwgxs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_4wyf3")
+
+[node name="HurtSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_k0juu")
+bus = &"SFX"
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
